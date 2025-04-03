@@ -27,13 +27,19 @@ def load_model():
 
 model = load_model()
 
+# Ensure category names are clean
+term_categories = ['Short Term', 'Medium Term', 'Long Term']
+term_categories = [x.strip() for x in term_categories] 
+
 # Initialize label encoders (you'll need to replace these with your actual categories)
 label_encoders = {
     'Gender': LabelEncoder().fit(["Male", "Female", "Joint", "Sex Not Available"]),
     'loan_type': LabelEncoder().fit(["type1", "type2", "type3"]),
     'loan_purpose': LabelEncoder().fit(["p1", "p2", "p3"]),
     'credit_type': LabelEncoder().fit(["CIB", "CRIF", "EXP"]),
-    'occupancy_type': LabelEncoder().fit(['pr', 'ir', 'sr'])
+    'occupancy_type': LabelEncoder().fit(['pr', 'ir', 'sr']),
+    'age_group': LabelEncoder().fit(['<25', '25-34', '35-44','45-54','55-64','65-74','>74']),
+    'Term_Category': LabelEncoder().fit(term_categories),
 }
 
 
@@ -46,20 +52,22 @@ with st.sidebar:
     # Numerical inputs with validation
     loan_amount = st.number_input("Loan Amount ($)", min_value=10000, value=50000, step=1000)
     property_value = st.number_input("Property Value ($)", min_value=10000, value=250000, step=1000)
-    monthly_income = st.number_input("Monthly Income ($)", min_value=1000, value=15000, step=100)
-    ltv = st.number_input("Loan-to-Value Ratio (LTV )", min_value=25.0, max_value=115.0, value=70.0) 
+    income = st.number_input("Monthly Income ($)", min_value=1000, value=15000, step=100)
+    LTV = st.number_input("Loan-to-Value Ratio (LTV )", min_value=25.0, max_value=115.0, value=70.0) 
     dtir = st.number_input("Debt-to-Income Ratio (DTI )", min_value=6.0, max_value=68.0, value=40.0)
-    dscr =  st.number_input("Debt Service Coverage Ratio (DSCR )", min_value=1.0, max_value=15.0, value=14.0)
-    icr = st.number_input("Interest Coverage Ratio (ICR )", min_value=1.0, max_value=25.0, value=10.0)
-    credit_score = st.number_input("Credit Score", min_value=500, max_value=900, value=700)
+    DSCR =  st.number_input("Debt Service Coverage Ratio (DSCR )", min_value=1.0, max_value=15.0, value=14.0)
+    ICR = st.number_input("Interest Coverage Ratio (ICR )", min_value=1.0, max_value=25.0, value=10.0)
+    Credit_Score = st.number_input("Credit Score", min_value=500, max_value=900, value=700)
     rate_of_interest = st.number_input("Yearly Interest Rate (%)", min_value=0.0, max_value=10.0, value=5.0) 
     
     # Categorical inputs
-    gender = st.selectbox("Gender", label_encoders['Gender'].classes_)
+    Gender = st.selectbox("Gender", label_encoders['Gender'].classes_)
     loan_type = st.selectbox("Loan Type", label_encoders['loan_type'].classes_)
     loan_purpose = st.selectbox("Loan Purpose", label_encoders['loan_purpose'].classes_)
     credit_type = st.selectbox("Credit Type", label_encoders['credit_type'].classes_)
     occupancy_type = st.selectbox("Occupancy Type", label_encoders['occupancy_type'].classes_)
+    age_group = st.selectbox("Age Group", label_encoders['age_group'].classes_)
+    Term_Category = st.selectbox("Term Category", label_encoders['Term_Category'].classes_)
 
 def preprocess_input(data):
     """Convert categorical variables using label encoding"""
@@ -68,6 +76,8 @@ def preprocess_input(data):
     data['loan_purpose'] = label_encoders['loan_purpose'].transform([data['loan_purpose']])[0]
     data['credit_type'] = label_encoders['credit_type'].transform([data['credit_type']])[0]
     data['occupancy_type'] = label_encoders['occupancy_type'].transform([data['occupancy_type']])[0]
+    data['age_group'] = label_encoders['age_group'].transform([data['age_group']])[0]
+    data['Term_Category'] = label_encoders['Term_Category'].transform([data['Term_Category']])[0]
     return data
 
 def main():
@@ -75,18 +85,20 @@ def main():
     input_data = {
         'loan_amount': loan_amount,
         'property_value': property_value,
-        'monthly_income': monthly_income,
-        'ltv': ltv,
+        'income': income,
+        'LTV': LTV,
         'dtir': dtir,
-        'dscr':dscr,
-        'icr':icr,
-        'credit_score': credit_score,
+        'DSCR':DSCR,
+        'ICR':ICR,
+        'Credit_Score': Credit_Score,
         'rate_of_interest': rate_of_interest,
-        'Gender': gender,
+        'Gender': Gender,
         'loan_type': loan_type,
         'loan_purpose': loan_purpose,
         'credit_type': credit_type,
-        'occupancy_type': occupancy_type
+        'occupancy_type': occupancy_type,
+        'age_group': age_group,
+        'Term_Category': Term_Category
     }
     
     # Display input summary
