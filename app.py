@@ -74,8 +74,8 @@ def preprocess_input(data):
     data['Gender'] = label_encoders['Gender'].transform([data['Gender']])[0]
     data['loan_type'] = label_encoders['loan_type'].transform([data['loan_type']])[0]
     data['loan_purpose'] = label_encoders['loan_purpose'].transform([data['loan_purpose']])[0]
-    data['credit_type'] = label_encoders['credit_type'].transform([data['credit_type']])[0]
     data['occupancy_type'] = label_encoders['occupancy_type'].transform([data['occupancy_type']])[0]
+    data['credit_type'] = label_encoders['credit_type'].transform([data['credit_type']])[0] 
     data['age_group'] = label_encoders['age_group'].transform([data['age_group']])[0]
     data['Term_Category'] = label_encoders['Term_Category'].transform([data['Term_Category']])[0]
     return data
@@ -83,21 +83,21 @@ def preprocess_input(data):
 def main():
     # Create input dictionary
     input_data = {
-        'loan_amount': loan_amount,
-        'property_value': property_value,
-        'income': income,
-        'LTV': LTV,
-        'dtir': dtir,
-        'DSCR':DSCR,
-        'ICR':ICR,
-        'Credit_Score': Credit_Score,
-        'rate_of_interest': rate_of_interest,
         'Gender': Gender,
         'loan_type': loan_type,
         'loan_purpose': loan_purpose,
-        'credit_type': credit_type,
+        'loan_amount': loan_amount,
+        'rate_of_interest': rate_of_interest,
+        'property_value': property_value,
         'occupancy_type': occupancy_type,
+        'income': income,
+        'credit_type': credit_type,
+        'Credit_Score': Credit_Score,
         'age_group': age_group,
+        'LTV': LTV,
+        'dtir': dtir,
+        'ICR':ICR,
+        'DSCR':DSCR,
         'Term_Category': Term_Category
     }
     
